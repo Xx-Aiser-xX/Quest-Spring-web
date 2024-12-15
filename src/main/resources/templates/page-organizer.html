@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:if="${model.base.title}" th:text="${model.base.title}"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/organizer-page.css">
+</head>
+<body>
+    <header th:replace="~{fragments/header}"></header>
+
+    <div class="container">
+        <div id="main">
+            <div id="foto-description">
+                <div >
+                    <img id="foto" th:src="'/images/' + ${model.photoUrl}" alt="Фото организатора">
+                    <div class="text-foto ">
+                        <div class="name-foto">
+                            <p th:text="${model.name}"></p>
+                        </div>
+                        <div class="quest-characteristics p-lg-1">
+                            <p th:text="${model.rating} + '/5'"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="subtitle mt-3">
+                    <p th:text="${model.description}"></p>
+                    <div>
+                        <p th:text="'Телефон:' + ${model.phone}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <b class="subtitle ms-5">Квесты от данного организатора</b>
+                <div th:if="${#lists.isEmpty(model.questCardViewModel)}" class="alert alert-info">
+                    Записей не найдено
+                </div>
+                <div class="block-of-cards" th:if="${not #lists.isEmpty(model.questCardViewModel)}">
+                    <div class="card" style="width: 18rem;" th:each=" quest : ${model.questCardViewModel}">
+                        <img src="/images/castle.png" class="card-img-top" alt="foto-quest">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${quest.name}"></h5>
+                            <p class="card-text">
+                                <span th:text="'Рейтинг:' + ${quest.rating}"></span><br>
+                                <span th:text="'Локация:' + ${quest.location}"></span><br>
+                                <span th:text="'Цена:' + ${quest.price}"></span> ₽<br>
+                                <span th:text="'Участники:' + ${quest.maxParticipants}"></span>
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <a class="btn btn-primary" th:href="@{/quest/{id}(id=${quest.questId})}" role="button">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                <nav th:if="${model.totalPages > 1}" aria-label="Page navigation">
+                    <ul class="pagination justify-content-center my-5">
+                        <li class="page-item"
+                            th:each="pageNumber : ${#numbers.sequence(1, model.totalPages)}"
+                            th:classappend="${pageNumber == form.questPage} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/organizer/{id}(id=${model.id}, questPage=${pageNumber})}"
+                               th:text="${pageNumber}"></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

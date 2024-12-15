@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/admin-page.css">
+    <title>Ошибка</title>
+</head>
+<body class="d-flex flex-column h-100">
+<header th:replace="~{fragments/header}"></header>
+<main class="flex-shrink-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="jumbotron text-center rounded col-md-8 align-self-center pt-5">
+                <div class="justify-content-center">
+                    <h1>Что-то пошло не так</h1>
+                </div>
+                <p th:text="${errorMessage}">Почта или пароль уже существуют</p>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

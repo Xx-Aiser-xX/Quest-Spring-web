@@ -1,0 +1,59 @@
+#container {
+    display: flex;
+    flex-direction: row;
+}
+
+#header{
+    width: 100%;
+    border-bottom: 3px solid #2b0d3c;
+}
+
+#header-text{
+    color: gold;
+}
+
+#search{
+    margin-right: auto;
+}
+
+
+
+
+#foto-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.foto {
+    flex-shrink: 0;
+    width: 150px;
+    height: auto;
+}
+
+.info {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+
+
+.subtitle {
+    font-size: 1.7rem;
+    text-indent: 3rem;
+}
+
+.block-of-cards{
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+#footer{
+    background-color: RGBA(33, 37, 41, var(--bs-bg-opacity, 1)) !important;
+    color: gold;
+}
+.footer>div>span{
+    font-size: 1.35rem;
+}

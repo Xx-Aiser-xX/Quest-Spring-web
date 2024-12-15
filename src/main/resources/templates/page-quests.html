@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/admin-page.css">
+
+    <title th:if="${model.base.title}" th:text="${model.base.title}"></title>
+</head>
+<body>
+<header th:replace="~{fragments/header}"></header>
+
+
+<main class="container">
+    <div class="row m-5">
+        <div class="container">
+            <div class="col-md-3">
+                <ul id="button-entity" class="list-group me-3 mb-3">
+                    <li class="list-group-item btn btn-outline-secondary ms-5">
+                        <a href="/organizer/create/quest" class="text-decoration-none">Добавить</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(model.quests)}" class="alert alert-info">
+            Записаей не найдено
+        </div>
+        <div class="table-responsive" th:if="${not #lists.isEmpty(model.quests)}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">Локация</th>
+                    <th scope="col">Длительность</th>
+                    <th scope="col">Макс кол-во человек</th>
+                    <th scope="col">Сложность</th>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Рейтинг</th>
+                    <th scope="col">Жанр</th>
+                    <th scope="col">Url фото</th>
+                    <th scope="col">Возраст</th>
+                    <th scope="col">Id огранизатора</th>
+                    <th scope="col">Изменить/Удалить</th>
+                    <th scope="col">Бронирования</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="quest: ${model.quests}">
+                    <td th:text="${quest.name}"></td>
+                    <td th:text="${quest.description}"></td>
+                    <td th:text="${quest.location}"></td>
+                    <td th:text="${quest.duration}"></td>
+                    <td th:text="${quest.maxParticipants}"></td>
+                    <td th:text="${quest.difficulty}"></td>
+                    <td th:text="${quest.price}"></td>
+                    <td th:text="${quest.rating}"></td>
+                    <td th:text="${quest.genre}"></td>
+                    <td th:text="${quest.photoUrl}"></td>
+                    <td th:text="${quest.ageRestriction} + '+'"></td>
+                    <td th:text="${quest.organizerId}"></td>
+                    <td>
+                        <a th:href="@{/organizer/update/quest/{id}(id=${quest.id})}" class="btn btn-primary">Изменить</a>
+                        <form th:action="@{/organizer/deleted/quest/{id}(id=${quest.id})}" th:method="post">
+                            <input type="hidden" name="questId" th:value="${quest.id}" />
+                            <button type="submit" class="btn btn-primary">Удалить</button>
+                        </form>
+                    </td>
+                    <td>
+                        <a th:href="@{/organizer/bookings(questId=${quest.id})}" class="btn btn-primary">Посмотреть</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <nav th:if="${model.totalPages > 1}" aria-label="Page navigation">
+        <ul class="pagination justify-content-center my-5">
+            <li class="page-item"
+                th:each="pageNumber : ${#numbers.sequence(1, model.totalPages)}"
+                th:classappend="${pageNumber == form.page} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/admin/quests(page=${pageNumber})}"
+                   th:text="${pageNumber}"></a>
+            </li>
+        </ul>
+    </nav>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

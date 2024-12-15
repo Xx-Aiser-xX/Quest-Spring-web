@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${model.base.title}"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/honor-board-page.css">
+</head>
+<body>
+    <header th:replace="~{fragments/header}"></header>
+
+    <div class="container">
+        <div id="main">
+            <div class="subtitle mt-5 mb-5">
+                <b >Доска почёта</b>
+            </div>
+            <div th:if="${#lists.isEmpty(model.honorBoardCountCardViewModel)}" class="alert alert-info">
+                Записаей не найдено
+            </div>
+            <div class="block-of-cards" th:if="${not #lists.isEmpty(model.honorBoardCountCardViewModel)}">
+                <div class="card" style="width: 18rem;" th:each="user : ${model.honorBoardCountCardViewModel}">
+
+                    <img class="card-img-top"  th:src="'/images/' + ${user.photoUrl}" alt="Фото пользователя">
+<!--                    <img class="card-img-top" src="/images/user.png" alt="foto-quest"/>-->
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${user.name}"></h5>
+                        <p class="card-text" th:text="'Кол-во пройденных квестов:' + ${user.completedQuests}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

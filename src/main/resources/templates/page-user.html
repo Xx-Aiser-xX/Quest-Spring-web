@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${model.base.title}"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/user-page.css">
+</head>
+<body>
+    <header th:replace="~{fragments/header}"></header>
+
+    <div class="container">
+        <div id="main">
+            <div id="foto-info">
+                <img class="foto mt-5"  th:src="'/images/' + ${model.photoUrl}" alt="Фото пользователя">
+                <div class="info ms-4 mt-5">
+                    <p>Информация</p>
+                    <ul class="info-attribute" type="none">
+                        <li th:text="'Имя: ' + ${model.name}"></li>
+                        <li th:text="'Почта: ' + ${model.email}"></li>
+                        <li th:text="'Телефон: ' + ${model.phone}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <b class="subtitle ms-5">Текущие бронирования</b>
+                <div th:if="${#lists.isEmpty(model.questCurrentBookingsCardViewModel)}" class="alert alert-info">
+                    Записаей не найдено
+                </div>
+                <div class="block-of-cards" th:if="${not #lists.isEmpty(model.questCurrentBookingsCardViewModel)}">
+                    <div class="card" th:each="booking : ${model.questCurrentBookingsCardViewModel}">
+                        <div class="card" style="width: 18rem;">
+                            <img src="/images/castle.png" class="card-img-top" alt="foto-quest">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${booking.questCardViewModel.name}"></h5>
+                                <p class="card-text">
+                                    <span th:text="'Рейтинг:' + ${booking.questCardViewModel.rating}"></span><br>
+                                    <span th:text="'Локация:' + ${booking.questCardViewModel.location}"></span><br>
+                                    <span th:text="'Цена:' + ${booking.questCardViewModel.price}"></span> ₽<br>
+                                    <span th:text="'Участники:' + ${booking.questCardViewModel.maxParticipants}"></span>
+                                </p>
+                            </div>
+                            <div class="card-body">
+                                <a class="btn btn-primary" th:href="@{/quest/{id}(id=${booking.questCardViewModel.questId})}" role="button">Подробнее</a>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="card-text ms-4 mt-4 mb-4">
+                                <span th:text="'Дата:' + ${booking.date}"></span><br>
+                                <span th:text="'Время:' + ${booking.time}"></span><br>
+                                <span th:text="'Количество участников:' + ${booking.participants}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <b class="subtitle ms-5">Пройденные квесты</b>
+                <div th:if="${#lists.isEmpty(model.questCompletedCardViewModel)}" class="alert alert-info">
+                    Записаей не найдено
+                </div>
+                <div class="block-of-cards" th:if="${not #lists.isEmpty(model.questCompletedCardViewModel)}">
+                    <div class="card" th:each="booking : ${model.questCompletedCardViewModel}">
+                        <div class="card" style="width: 18rem;">
+                            <img src="/images/castle.png" class="card-img-top" alt="foto-quest">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${booking.questCardViewModel.name}"></h5>
+                                <p class="card-text">
+                                    <span th:text="'Рейтинг:' + ${booking.questCardViewModel.rating}"></span><br>
+                                    <span th:text="'Локация:' + ${booking.questCardViewModel.location}"></span><br>
+                                    <span th:text="'Цена:' + ${booking.questCardViewModel.price}"></span> ₽<br>
+                                    <span th:text="'Участники:' + ${booking.questCardViewModel.maxParticipants}"></span>
+                                </p>
+                            </div>
+                            <div class="card-body">
+                                <a class="btn btn-primary" th:href="@{/quest/{id}(id=${booking.questCardViewModel.questId})}" role="button">Подробнее</a>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="card-text ms-4 mt-4 mb-4">
+                                <span th:text="'Дата:' + ${booking.date}"></span><br>
+                                <span th:text="'Время:' + ${booking.time}"></span><br>
+                                <span th:text="'Количество участников:' + ${booking.participants}"></span>
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <div id="reviewForm-${booking.questCardViewModel.questId}" class="review-form">
+                                <form action="/user/save" method="post">
+                                    <input type="hidden" th:name="questId" th:value="${booking.questCardViewModel.questId}"/>
+                                    <input type="hidden" th:name="bookingId" th:value="${booking.id}"/>
+                                    <input type="hidden" name="name" th:value="${model.name}"/>
+
+                                    <div class="form-group">
+                                        <label for="reviewText">Текст отзыва:</label>
+                                        <textarea id="reviewText" name="reviewText" class="form-control" placeholder="Отзыв" required></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="rating">Оценка:</label>
+                                        <select id="rating" name="rating" class="form-control" required>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3">Отправить отзыв</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <nav th:if="${model.totalPages > 1}" aria-label="Page navigation">
+                    <ul class="pagination justify-content-center my-5">
+                        <li class="page-item"
+                            th:each="pageNumber : ${#numbers.sequence(1, model.totalPages)}"
+                            th:classappend="${pageNumber == form.userPage} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/user/{id}(id=${model.id} ,userPage=${pageNumber})}"
+                               th:text="${pageNumber}"></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

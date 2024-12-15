@@ -1,0 +1,63 @@
+
+#container {
+    display: flex;
+    flex-direction: row;
+}
+
+#header{
+    width: 100%;
+    border-bottom: 3px solid #2b0d3c;
+}
+
+#header-text{
+    color: gold;
+}
+
+#description-block{
+    background: #2e1a30;
+    padding: 5% 5% 2%;
+    height: 90%;
+}
+
+#site-description h4{
+    padding-left: 5%;
+    color: gold;
+}
+
+#site-description p{
+    color: white;
+}
+
+#main{
+    margin-left: 4rem;
+    margin-top: 2rem;
+}
+
+.block-of-cards{
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+#aside{
+    width: 15%;
+    height: 15%;
+    padding: 2%;
+    background: #efc1c1;
+    position: relative;
+}
+
+#aside p{
+    margin-bottom: 0;
+    margin-top: 1rem;
+}
+
+#footer{
+    background-color: RGBA(33, 37, 41, var(--bs-bg-opacity, 1)) !important;
+    color: gold;
+}
+
+.footer>div>span{
+    font-size: 1.35rem;
+}

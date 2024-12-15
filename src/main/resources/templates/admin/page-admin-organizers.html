@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/admin-page.css">
+
+    <title th:if="${model.base.title}" th:text="${model.base.title}"></title>
+</head>
+<body>
+<header th:replace="~{fragments/header}"></header>
+
+
+<main class="container">
+    <div class="row m-5">
+        <div class="container">
+            <div class="col-md-3">
+                <ul id="button-entity" class="list-group me-3 mb-3">
+                    <li class="list-group-item btn btn-outline-secondary">
+                        <a href="/admin/bookings" class="text-decoration-none">Бронирования</a>
+                    </li>
+                    <li class="list-group-item btn btn-outline-secondary">
+                        <a href="/admin/quests" class="text-decoration-none">Квесты</a>
+                    </li>
+                    <li class="list-group-item btn btn-outline-secondary">
+                        <a href="/admin/organizers" class="text-decoration-none active">Организаторы</a>
+                    </li>
+                    <li class="list-group-item btn btn-outline-secondary">
+                        <a href="/admin/users" class="text-decoration-none">Пользователи</a>
+                    </li>
+                    <li class="list-group-item btn btn-outline-secondary">
+                        <a href="/admin/reviews" class="text-decoration-none">Отзывы</a>
+                    </li>
+                    <li class="list-group-item btn btn-outline-secondary ms-5">
+                        <a href="/admin/create/organizer" class="text-decoration-none">Добавить</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(model.organizers)}" class="alert alert-info">
+            Записей не найдено
+        </div>
+        <div class="table-responsive" th:if="${not #lists.isEmpty(model.organizers)}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Телефон</th>
+                    <th scope="col">Город</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">Рейтинг</th>
+                    <th scope="col">Url фото</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="organizer: ${model.organizers}">
+                    <td th:text="${organizer.name}"></td>
+                    <td th:text="${organizer.phone}"></td>
+                    <td th:text="${organizer.city}"></td>
+                    <td th:text="${organizer.description}"></td>
+                    <td th:text="${organizer.rating}"></td>
+                    <td th:text="${organizer.photoUrl}"></td>
+                    <td>
+                        <a th:href="@{/admin/update/organizer/{id}(id=${organizer.id})}" class="btn btn-primary">Изменить</a>
+
+                        <form th:action="@{/admin/deleted/organizer/{id}(id=${organizer.id})}" th:method="post">
+                            <input type="hidden" name="organizerId" th:value="${organizer.id}" />
+                            <button type="submit" class="btn btn-primary">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <nav th:if="${model.totalPages > 1}" aria-label="Page navigation">
+        <ul class="pagination justify-content-center my-5">
+            <li class="page-item"
+                th:each="pageNumber : ${#numbers.sequence(1, model.totalPages)}"
+                th:classappend="${pageNumber == form.page} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/admin/organizers(page=${pageNumber})}"
+                   th:text="${pageNumber}"></a>
+            </li>
+        </ul>
+    </nav>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

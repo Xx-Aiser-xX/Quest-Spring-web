@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/admin-page.css">
+
+    <title th:if="${model.base.title}" th:text="${model.base.title}"></title>
+</head>
+<body>
+<header th:replace="~{fragments/header}"></header>
+
+
+<main class="container">
+    <div class="row m-5">
+        <form th:action="@{/admin/create/review}" method="post">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Имя:</span>
+                <input type="text" name="name" placeholder="Иван" th:value="${form.name}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.name')}"
+                     th:errors="*{form.name}"></div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Рейтинг:</span>
+                <input type="text" name="rating" placeholder="5" th:value="${form.rating}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.rating')}"
+                     th:errors="*{form.rating}"></div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Id бронирования:</span>
+                <input type="text" name="bookingId" placeholder="1" th:value="${form.bookingId}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.bookingId')}"
+                     th:errors="*{form.bookingId}"></div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Описание:</span>
+                <textarea name="reviewText" placeholder="Очень увлекательный рассказ :)"
+                          th:text="${form.reviewText}"
+                          class="form-control"
+                          aria-describedby="inputGroup-sizing-default">
+                </textarea>
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.reviewText')}"
+                     th:errors="*{form.reviewText}"></div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

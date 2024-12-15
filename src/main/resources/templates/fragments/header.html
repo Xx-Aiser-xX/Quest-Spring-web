@@ -1,0 +1,33 @@
+<header id="header" class="p-3 text-bg-dark" th:fragment="header" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a class="btn" th:href="@{/main}" role="button"><div id="header-text"><h2>КвестоПраздник</h2></div></a>
+      <div class="d-flex ms-auto align-items-center">
+        <div class="text-end">
+<!--          <button sec:authorize="!isAuthenticated()" type="button" class="btn btn-outline-light me-2">Login</button>-->
+<!--          <button sec:authorize="!isAuthenticated()" type="button" class="btn btn-warning">Sign-up</button>-->
+<!--          <button sec:authorize="isAuthenticated()" type="button" class="btn btn-warning">Logout</button>-->
+          <a sec:authorize="!isAuthenticated()" href="/users/login" class="btn btn-outline-light me-2">Login</a>
+          <a sec:authorize="!isAuthenticated()" href="/users/register" class="btn btn-warning">Sign-up</a>
+          <a sec:authorize="isAuthenticated()" href="/users/logout" class="btn btn-warning">Logout</a>
+
+          <span class="ms-3">
+            <a class="text-body-secondary h-25" th:href="@{/honor-boards}">
+              <img src="/images/медаль.png" alt="Доска почёта"/>
+            </a>
+          </span>
+            <span class="ms-3" sec:authorize="hasRole('ADMIN')">
+                <a class="text-body-secondary h-25" th:href="@{/admin/quests}">
+                    <img src="/images/adm.png" alt="Админ"/>
+                </a>
+            </span>
+        </div>
+          <div class="dropdown text-end ms-3" sec:authorize="hasAnyRole('ADMIN', 'USER')">
+              <a th:href="@{/user}" class="d-block link-body-emphasis text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img th:src="'/images/' + ${model.base.photoUrl}" alt="профиль" width="40" height="40" class="rounded-circle">
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head >
+    <meta charset="UTF-8">
+    <title th:if="${model.base.title}" th:text="${model.base.title}"> </title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/main-page.css">
+</head>
+<body>
+    <header id="header" class="p-3 text-bg-dark">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a class="btn" th:href="@{/main}" role="button"><div id="header-text"><h2>КвестоПраздник</h2></div></a>
+                <div class="d-flex ms-auto align-items-center">
+                    <form id="search" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" method="get" th:action="@{/main}">
+                        <input type="search" name="search" class="form-control form-control-dark text-bg-dark" placeholder="Поиск" aria-label="Search" th:value="${search}">
+                    </form>
+
+                    <div class="text-end">
+                        <a sec:authorize="!isAuthenticated()" href="/users/login" class="btn btn-outline-light me-2">Login</a>
+                        <a sec:authorize="!isAuthenticated()" href="/users/register" class="btn btn-warning">Sign-up</a>
+                        <span class="ms-3">
+                            <a class="text-body-secondary h-25" th:href="@{/honor-boards}">
+                              <img src="/images/медаль.png" alt="Доска почёта"/>
+                            </a>
+                        </span>
+                        <span class="ms-3" sec:authorize="hasRole('ADMIN')">
+                            <a class="text-body-secondary h-25" th:href="@{/admin/quests}">
+                              <img src="/images/adm.png" alt="Админ"/>
+                            </a>
+                        </span>
+                        <span class="ms-3" sec:authorize="hasRole('ORGANIZER')">
+                            <a class="text-body-secondary h-25" th:href="@{/organizer/quests}">
+                              <img src="/images/adm.png" alt="Админ"/>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="dropdown text-end ms-3" sec:authorize="hasAnyRole('ADMIN', 'USER')">
+                        <a th:href="@{/user}" class="d-block link-body-emphasis text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img th:src="'/images/' + ${model.base.photoUrl}" alt="профиль" width="40" height="40" class="rounded-circle">
+                        </a>
+                    </div>
+                    <div class="text-end ms-5">
+                        <a sec:authorize="isAuthenticated()" href="/users/logout" class="btn btn-warning">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div id="description-block">
+        <div id="site-description" >
+            <h4>Добро пожаловать в мир захватывающих квестов!</h4>
+            <p>Здесь вас ждут яркие эмоции, неожиданные повороты и полное погружение в атмосферу приключений. Соберите команду, разгадайте тайны, выберитесь из запертой комнаты или раскройте загадочное дело. Наши квесты созданы для тех, кто любит испытания, командную работу и адреналин. Готовы проверить себя? Пора начинать!</p>
+        </div>
+    </div>
+        <div id="main">
+            <div id="buttons-sort mt-0">
+                <a class="btn btn-primary rounded-pill px-3 py-0"
+                   th:href="@{/main(questPage=${form.questPage}, sort='rating')}">По рейтингу</a>
+                <a class="btn btn-primary rounded-pill px-3 py-0"
+                   th:href="@{/main(questPage=${form.questPage}, sort='popularity')}">По популярности</a>
+                <a class="btn btn-primary rounded-pill px-3 py-0"
+                   th:href="@{/main(questPage=${form.questPage}, sort='price')}">По цене</a>
+                <a class="btn btn-primary rounded-pill px-3 py-0"
+                   th:href="@{/main(questPage=${form.questPage}, sort='random')}">Случайно</a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(model.quests)}" class="alert alert-info">
+                Записей не найдено
+            </div>
+
+            <div class="block-of-cards" th:if="${not #lists.isEmpty(model.quests)}">
+                <div class="card" style="width: 18rem;" th:each="quest : ${model.quests}">
+                    <img class="card-img-top" th:src="'/images/' + ${quest.photoUrl}" alt="Фото квеста">
+                    <div class="card-body">
+
+                        <h5 class="card-title" th:text="${quest.name}"></h5>
+                        <p class="card-text">
+                            <span th:text="'Рейтинг:' + ${quest.rating}"></span><br>
+                            <span th:text="'Локация:' + ${quest.location}"></span><br>
+                            <span th:text="'Цена:' + ${quest.price}"></span> ₽<br>
+                            <span th:text="'Участники:' + ${quest.maxParticipants}"></span>
+                        </p>
+                    </div>
+
+                    <div class="card-body">
+                        <a class="btn btn-primary" th:href="@{/quest/{id}(id=${quest.questId})}" role="button">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            <nav th:if="${model.totalPages > 1}" aria-label="Page navigation">
+                <ul class="pagination justify-content-center my-5">
+                    <li class="page-item"
+                        th:each="pageNumber : ${#numbers.sequence(1, model.totalPages)}"
+                        th:classappend="${pageNumber == form.questPage} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/main(questPage=${pageNumber}, sort=${sort}, search=${search})}"
+                           th:text="${pageNumber}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    <footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

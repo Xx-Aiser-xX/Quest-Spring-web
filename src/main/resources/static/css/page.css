@@ -1,0 +1,110 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #6a6a6a;
+    background-size: cover;
+}
+#header{
+    width: 100%;
+    height: 70px;
+    text-align: center;
+    border-bottom: 2px solid #a3844c;
+    color: gold;
+    background: #1e1e1e;
+    line-height: 70px;
+    margin-bottom: 70px;
+    float: left;
+}
+
+#description>h3{
+    padding-left: 15%;
+    padding-bottom: 0;
+    padding-top: 0;
+
+    color: #ffe541;
+}
+
+#description>p{
+    padding-left: 5%;
+    padding-top: 1rem;
+
+}
+
+#main{
+    width: 50%;
+    padding: 20px 2%;
+    margin-left: 7%;
+    background: #555555;
+    border: 1px solid silver;
+    float: left;
+}
+
+#aside{
+    width: 15%;
+    padding: 20px 2.5%;
+    margin-right: 7%;
+    background: #efc1c1;
+    float: left;
+    position: relative;
+    bottom: -10px;
+}
+
+#footer{
+    width: 100%;
+    height: 120px;
+    background: #1e1e1e;
+    border-top: 2px solid #a3844c;
+    margin-top: 70px;
+
+    text-align: center;
+    color: gold;
+    float: left;
+}
+
+#user{
+    background: grey;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    position: fixed;
+    border-radius: 50%;
+    right: 10px;
+    top: 20px;
+}
+
+#nav{
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#nav li {
+    border-radius: 10px;
+    width: 85px;
+
+}
+
+#nav li:hover{
+    color: #bf7f1e;
+    background: #2c2c2c;
+}
+
+
+#nav li:not(:last-of-type){
+    margin-bottom: 20px;
+}
+
+#github-footer{
+    /*text-align: center;*/
+    width: 50px;
+    z-index: 1;
+}
+
+#footer>div>a:hover{
+    background: rgb(255, 0, 0);
+    z-index: 3;
+}
+

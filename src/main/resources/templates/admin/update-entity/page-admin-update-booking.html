@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/admin-page.css">
+
+    <title th:if="${model.base.title}" th:text="${model.base.title}"></title>
+</head>
+<body>
+<header th:replace="~{fragments/header}"></header>
+
+
+<main class="container">
+    <div class="row m-5">
+        <form th:action="@{/admin/update/booking/{id}(id=${form.id})}" method="post">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Id:</span>
+                <input type="text" disabled name="id" placeholder="6" th:value="${form.id}" class="form-control" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Количество участников:</span>
+                <input type="text" name="participants" placeholder="6" th:value="${form.participants}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.participants')}"
+                     th:errors="*{form.participants}"></div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Дата:</span>
+                <input type="text" name="date" placeholder="2024-12-31" th:value="${form.date}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.date')}"
+                     th:errors="*{form.date}"></div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Время:</span>
+                <input type="text" name="time" placeholder="23:54:55" th:value="${form.time}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.time')}"
+                     th:errors="*{form.time}"></div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Статус:</span>
+                <input type="text" name="status" placeholder="active" th:value="${form.status}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.status')}"
+                     th:errors="*{form.status}"></div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Id квеста:</span>
+                <input type="text" name="questId" placeholder="12" th:value="${form.questId}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.questId')}"
+                     th:errors="*{form.questId}"></div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Id пользователя:</span>
+                <input type="text" name="userId" placeholder="12" th:value="${form.userId}" class="form-control" aria-describedby="inputGroup-sizing-default">
+                <div class="input-group text-danger" th:if="${#fields.hasErrors('form.userId')}"
+                     th:errors="*{form.userId}"></div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </form>
+
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

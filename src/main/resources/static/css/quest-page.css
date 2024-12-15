@@ -1,0 +1,73 @@
+#container {
+    display: flex;
+    flex-direction: row;
+}
+
+#header{
+    width: 100%;
+    border-bottom: 3px solid #2b0d3c;
+}
+
+#header-text{
+    color: gold;
+}
+
+#search{
+    margin-right: auto;
+}
+
+#foto{
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.name-foto {
+    position: relative;
+    font-size: 2.5rem;
+    text-indent: 4rem;
+
+    margin-bottom: 10px;
+}
+
+.quest-characteristics {
+    display: flex;
+    gap: 10px;
+}
+
+.quest-characteristics p {
+    position: relative;
+    border-radius: 20px;
+    border: black solid 1px;
+    background: gold;
+    padding: 5px 10px;
+}
+.quest-characteristics a {
+    text-decoration: none;
+    color: black;
+}
+
+.subtitle {
+    font-size: 1.7rem;
+    text-indent: 3rem;
+}
+
+.block-of-cards{
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.card{
+    width: 18rem;
+}
+
+#footer{
+    background-color: RGBA(33, 37, 41, var(--bs-bg-opacity, 1)) !important;
+    color: gold;
+}
+.footer>div>span{
+    font-size: 1.35rem;
+}
