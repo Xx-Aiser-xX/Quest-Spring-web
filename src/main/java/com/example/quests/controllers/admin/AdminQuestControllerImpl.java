@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import org.example.questcontracts.controllers.admin.AdminQuestController;
 import org.example.questcontracts.form.PageSearchForm;
 import org.example.questcontracts.form.create.CreateQuestForm;
-import org.example.questcontracts.form.get.GetQuestForm;
 import org.example.questcontracts.form.update.UpdateQuestForm;
 import org.example.questcontracts.viewmodel.admin.AdminPanelCreateQuestViewModel;
 import org.example.questcontracts.viewmodel.admin.AdminPanelQuestViewModel;
@@ -20,9 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
+
 
 import java.security.Principal;
 
@@ -32,8 +29,6 @@ public class AdminQuestControllerImpl implements AdminQuestController {
     private final QuestService questService;
     private final UserService userService;
     private final AdminMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
-
 
     public AdminQuestControllerImpl(QuestService questService, UserService userService, AdminMapper mapper) {
         this.questService = questService;
@@ -46,7 +41,6 @@ public class AdminQuestControllerImpl implements AdminQuestController {
     @GetMapping("/quests")
     public String pageAdminQuests(@ModelAttribute("form") PageSearchForm form,
                                   Principal principal, Model model) {
-        LOG.log(Level.INFO, "quests review page for admin, ADMIN: " + principal.getName());
         var page = form.page() != null ? form.page() : 1;
         var size = 5;
         Page<QuestAndOrganizerNameDto> questDto = questService.getQuestAndNameOrganizer(page, size);
@@ -62,8 +56,7 @@ public class AdminQuestControllerImpl implements AdminQuestController {
 
     @Override
     @GetMapping("/create/quest")
-    public String pageCreateQuest(Principal principal, Model model) {
-        LOG.log(Level.INFO, "the quest creation page for the administrator, ADMIN: " + principal.getName());
+    public String pageAdminCreateQuest(Principal principal, Model model) {
         AdminPanelCreateQuestViewModel viewModel = new AdminPanelCreateQuestViewModel(
                 createBaseViewModel(principal,"Создание квеста")
         );
@@ -79,9 +72,8 @@ public class AdminQuestControllerImpl implements AdminQuestController {
 
     @Override
     @PostMapping("/create/quest")
-    public String createQuest(@Valid @ModelAttribute("form") CreateQuestForm questForm,
+    public String adminCreateQuest(@Valid @ModelAttribute("form") CreateQuestForm questForm,
                               BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "creating a quest from the administrator, organizerId" + questForm.organizerId() + ", ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
             AdminPanelCreateQuestViewModel viewModel = new AdminPanelCreateQuestViewModel(
                     createBaseViewModel(principal,"Создание квеста")
@@ -98,8 +90,7 @@ public class AdminQuestControllerImpl implements AdminQuestController {
 
     @Override
     @GetMapping("/update/quest/{id}")
-    public String editForm(@PathVariable int id, Principal principal, Model model) {
-        LOG.log(Level.INFO, "the quest update page for the administrator, questId:" + id + ", ADMIN: " + principal.getName());
+    public String pageAdminEditQuest(@PathVariable int id, Principal principal, Model model) {
         QuestAndOrganizerNameDto q = questService.findById(id);
         AdminPanelUpdateQuestViewModel viewModel = new AdminPanelUpdateQuestViewModel(
                 createBaseViewModel(principal,"Обновление квеста")
@@ -113,9 +104,8 @@ public class AdminQuestControllerImpl implements AdminQuestController {
 
     @Override
     @PostMapping("/update/quest/{id}")
-    public String edit(@PathVariable int id, @Valid @ModelAttribute("form") UpdateQuestForm form,
+    public String adminEditQuest(@PathVariable int id, @Valid @ModelAttribute("form") UpdateQuestForm form,
                        BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "changing the quest from the administrator, questId:" + id + ", ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
             AdminPanelUpdateQuestViewModel viewModel = new AdminPanelUpdateQuestViewModel(
                     createBaseViewModel(principal,"Обновление квеста")
@@ -132,8 +122,7 @@ public class AdminQuestControllerImpl implements AdminQuestController {
 
     @Override
     @PostMapping("/deleted/quest/{id}")
-    public String deletedQuest(@PathVariable int id) {
-        LOG.log(Level.INFO, "deleting a quest by the administrator, questId:" + id);
+    public String adminDeletedQuest(@PathVariable int id) {
         questService.deleteById(id);
         return "redirect:../../quests";
     }

@@ -17,9 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import java.security.Principal;
 import java.util.List;
@@ -32,7 +29,6 @@ public class UserControllerImpl implements UserController {
     private final BookingService bookingService;
     private final ReviewService reviewService;
     private final UserViewModelMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public UserControllerImpl(UserService userService, BookingService bookingService, ReviewService reviewService, UserViewModelMapper mapper) {
@@ -46,7 +42,6 @@ public class UserControllerImpl implements UserController {
     @GetMapping
     public String pageUser(@ModelAttribute("userForm") UserSearchForm userForm,
                            Principal principal, Model model) {
-        LOG.log(Level.INFO, "Show user page");
         var bookingPage = userForm.userPage() != null ? userForm.userPage() : 1;
         var bookingSize = 4;
         String email = principal.getName();
@@ -66,10 +61,9 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PostMapping("/save")
-    public String saveReview(@Valid @ModelAttribute CreateReviewForm reviewForm,
+    public String userCreateReview(@Valid @ModelAttribute CreateReviewForm reviewForm,
                              @RequestParam int bookingId,
                              RedirectAttributes redirectAttributes) {
-        LOG.log(Level.INFO, "adding a review to a quest by a user, bookingId" + reviewForm.bookingId());
         ReviewDto bookingDto = mapper.mapReviewFormToDto(reviewForm);
         reviewService.create(bookingDto);
         redirectAttributes.addAttribute("id", reviewForm.questId());

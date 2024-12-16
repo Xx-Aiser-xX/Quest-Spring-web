@@ -3,13 +3,8 @@ package com.example.quests.controllers;
 import com.example.quests.controllers.mappers.MainViewModelMapper;
 import com.example.quests.dto.PersonUserDto;
 import com.example.quests.dto.QuestDto;
-import com.example.quests.entitys.Person;
-import com.example.quests.services.PersonService;
 import com.example.quests.services.QuestService;
 import com.example.quests.services.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 import org.example.questcontracts.controllers.MainController;
 import org.example.questcontracts.form.QuestSearchForm;
 import org.example.questcontracts.viewmodel.BaseViewModel;
@@ -28,7 +23,6 @@ public class MainControllerImpl implements MainController {
     private final QuestService questService;
     private final UserService userService;
     private final MainViewModelMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public MainControllerImpl(QuestService questService, UserService userService, MainViewModelMapper mapper) {
@@ -43,7 +37,6 @@ public class MainControllerImpl implements MainController {
                            @RequestParam(required = false, defaultValue = "no") String sort,
                            @RequestParam(required = false) String search,
                            Principal principal, Model model) {
-        LOG.log(Level.INFO, "Show main page");
         var questPage = form.questPage() != null ? form.questPage() : 1;
         var questSize = 8;
 

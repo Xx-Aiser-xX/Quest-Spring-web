@@ -18,9 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import java.security.Principal;
 
@@ -31,7 +28,6 @@ public class AdminBookingControllerImpl implements AdminBookingController {
     private final BookingService bookingService;
     private final UserService userService;
     private final AdminMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public AdminBookingControllerImpl(BookingService bookingService, UserService userService, AdminMapper mapper) {
@@ -44,7 +40,6 @@ public class AdminBookingControllerImpl implements AdminBookingController {
     @GetMapping("/bookings")
     public String pageAdminBookings(@ModelAttribute("form") PageSearchForm form,
                                     Principal principal, Model model) {
-        LOG.log(Level.INFO, "booking review page for admin, ADMIN: " + principal.getName());
         var page = form.page() != null ? form.page() : 1;
         var size = 5;
         Page<BookingDto> bookingDto = bookingService.getAll(page, size);
@@ -61,8 +56,7 @@ public class AdminBookingControllerImpl implements AdminBookingController {
 
     @Override
     @GetMapping("/create/booking")
-    public String pageCreateBooking(Principal principal, Model model) {
-        LOG.log(Level.INFO, "the booking creation page for the administrator, ADMIN: " + principal.getName());
+    public String pageAdminCreateBooking(Principal principal, Model model) {
         AdminPanelCreateBookingViewModel viewModel = new AdminPanelCreateBookingViewModel(
                 createBaseViewModel(principal, "Создание бронирования")
         );
@@ -75,9 +69,8 @@ public class AdminBookingControllerImpl implements AdminBookingController {
 
     @Override
     @PostMapping("/create/booking")
-    public String createBooking(@Valid @ModelAttribute("form") CreateBookingForm bookingForm,
+    public String adminCreateBooking(@Valid @ModelAttribute("form") CreateBookingForm bookingForm,
                                 BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "creating a reservation from the administrator, userId: " + bookingForm.userId());
         if (bindingResult.hasErrors()) {
             AdminPanelCreateBookingViewModel viewModel = new AdminPanelCreateBookingViewModel(
                     createBaseViewModel(principal, "Создание Бронирования")
@@ -93,8 +86,7 @@ public class AdminBookingControllerImpl implements AdminBookingController {
 
     @Override
     @GetMapping("/update/booking/{id}")
-    public String editForm(@PathVariable int id, Principal principal, Model model) {
-        LOG.log(Level.INFO, "the booking update page for the administrator, bookingId: " + id + ", ADMIN: " + principal.getName());
+    public String pageAdminEditBooking(@PathVariable int id, Principal principal, Model model) {
         BookingDto b = bookingService.findById(id);
         AdminPanelUpdateBookingViewModel viewModel = new AdminPanelUpdateBookingViewModel(
                 createBaseViewModel(principal, "Обновление бронирования")
@@ -107,9 +99,8 @@ public class AdminBookingControllerImpl implements AdminBookingController {
 
     @Override
     @PostMapping("/update/booking/{id}")
-    public String edit(@PathVariable int id, @Valid @ModelAttribute("form") UpdateBookingForm form,
+    public String adminEditBooking(@PathVariable int id, @Valid @ModelAttribute("form") UpdateBookingForm form,
                        BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "changing the reservation from the administrator, bookingId: " + id + ", ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
             System.out.println(form);
             AdminPanelUpdateBookingViewModel viewModel = new AdminPanelUpdateBookingViewModel(
@@ -126,8 +117,7 @@ public class AdminBookingControllerImpl implements AdminBookingController {
 
     @Override
     @PostMapping("/deleted/booking/{id}")
-    public String deletedBooking(@PathVariable int id) {
-        LOG.log(Level.INFO, "deleting a reservation by the administrator, bookingId: " + id);
+    public String adminDeletedBooking(@PathVariable int id) {
         bookingService.deleteById(id);
         return "redirect:../../bookings";
     }

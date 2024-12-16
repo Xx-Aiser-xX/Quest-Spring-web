@@ -17,9 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import java.security.Principal;
 
@@ -28,7 +25,6 @@ import java.security.Principal;
 public class AdminUserControllerImpl implements AdminUserController {
     private final UserService userService;
     private final AdminMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
 
     public AdminUserControllerImpl(UserService userService, AdminMapper mapper) {
@@ -40,7 +36,6 @@ public class AdminUserControllerImpl implements AdminUserController {
     @GetMapping("/users")
     public String pageAdminUsers(@ModelAttribute("form") PageSearchForm form,
                                  Principal principal, Model model) {
-        LOG.log(Level.INFO, "the user creation page for the administrator, ADMIN: " + principal.getName());
         var page = form.page() != null ? form.page() : 1;
         var size = 5;
         Page<UserDto> userDto = userService.getAll(page, size);
@@ -57,8 +52,7 @@ public class AdminUserControllerImpl implements AdminUserController {
 
     @Override
     @GetMapping("/create/user")
-    public String pageCreateUser(Principal principal, Model model) {
-        LOG.log(Level.INFO, "page creating a user from the administrator, ADMIN: " + principal.getName());
+    public String pageAdminCreateUser(Principal principal, Model model) {
         AdminPanelCreateUserViewModel viewModel = new AdminPanelCreateUserViewModel(
                 createBaseViewModel(principal,"Создание бронирования")
         );
@@ -71,9 +65,8 @@ public class AdminUserControllerImpl implements AdminUserController {
 
     @Override
     @PostMapping("/create/user")
-    public String createUser(@Valid @ModelAttribute("form") UserRegistrationForm userForm,
+    public String adminCreateUser(@Valid @ModelAttribute("form") UserRegistrationForm userForm,
                                   BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "the user create page for the administrator, userEmail:" + userForm.email() + ", ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
 
             AdminPanelCreateUserViewModel viewModel = new AdminPanelCreateUserViewModel(
@@ -91,8 +84,7 @@ public class AdminUserControllerImpl implements AdminUserController {
 
     @Override
     @GetMapping("/update/user/{id}")
-    public String editForm(@PathVariable int id, Principal principal, Model model) {
-        LOG.log(Level.INFO, "the user update page for the administrator, userId:" + id + ", ADMIN: " + principal.getName());
+    public String pageAdminEditUser(@PathVariable int id, Principal principal, Model model) {
         UserDto u = userService.findById(id);
         AdminPanelUpdateUserViewModel viewModel = new AdminPanelUpdateUserViewModel(
                 createBaseViewModel(principal,"Обновление пользователя")
@@ -106,9 +98,8 @@ public class AdminUserControllerImpl implements AdminUserController {
 
     @Override
     @PostMapping("/update/user/{id}")
-    public String edit(@PathVariable int id, @Valid @ModelAttribute("form") UpdateUserFrom form,
+    public String adminEditUser(@PathVariable int id, @Valid @ModelAttribute("form") UpdateUserFrom form,
                        BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "changing the user from the administrator, userId:" + id + ", ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
             AdminPanelUpdateUserViewModel viewModel = new AdminPanelUpdateUserViewModel(
                     createBaseViewModel(principal,"Обновление квеста")
@@ -126,8 +117,7 @@ public class AdminUserControllerImpl implements AdminUserController {
 
     @Override
     @PostMapping("/deleted/user/{id}")
-    public String deletedQuest(@PathVariable int id) {
-        LOG.log(Level.INFO, "deleting a user by an administrator, userId:" + id);
+    public String adminDeletedQuest(@PathVariable int id) {
         userService.deleteById(id);
         return "redirect:../../users";
     }

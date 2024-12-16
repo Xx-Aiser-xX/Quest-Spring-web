@@ -24,9 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import java.security.Principal;
 
@@ -38,7 +35,6 @@ public class OrganizerControllerImpl implements OrganizerController {
     private final QuestService questService;
     private final BookingService bookingService;
     private final OrganizerViewModelMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public OrganizerControllerImpl(OrganizerService organizerService, UserService userService, QuestService questService, BookingService bookingService, OrganizerViewModelMapper mapper) {
@@ -54,7 +50,6 @@ public class OrganizerControllerImpl implements OrganizerController {
     public String pageOrganizer(@PathVariable int id,
                                 @ModelAttribute("form") QuestSearchForm form,
                                 Principal principal, Model model){
-        LOG.log(Level.INFO, "Show organizer page");
         var questPage = form.questPage() != null ? form.questPage() : 1;
         var questSize = 5;
 
@@ -76,7 +71,6 @@ public class OrganizerControllerImpl implements OrganizerController {
     @GetMapping("/quests")
     public String pageOrganizerQuests(@ModelAttribute("form") PageSearchForm form,
                                 Principal principal, Model model){
-        LOG.log(Level.INFO, "Show the organizer quests page, organizerId: " + principal.getName());
         var questPage = form.page() != null ? form.page() : 1;
         var questSize = 5;
 
@@ -98,8 +92,7 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @GetMapping("/create/quest")
-    public String pageCreateQuest(Principal principal, Model model) {
-        LOG.log(Level.INFO, "Show the organizer create quest page, organizerId: " + principal.getName());
+    public String pageOrganizerCreateQuest(Principal principal, Model model) {
 
         AdminPanelCreateQuestViewModel viewModel = new AdminPanelCreateQuestViewModel(
                 createBaseViewModel(principal,"Создание квеста")
@@ -115,9 +108,8 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @PostMapping("/create/quest")
-    public String createQuest(@Valid @ModelAttribute("form") OrganizerCreateQuestForm form,
+    public String organizerCreateQuest(@Valid @ModelAttribute("form") OrganizerCreateQuestForm form,
                               BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "creating a quest from the organizer, organizerId: " + principal.getName());
         if (bindingResult.hasErrors()) {
             AdminPanelCreateQuestViewModel viewModel = new AdminPanelCreateQuestViewModel(
                     createBaseViewModel(principal,"Создание квеста")
@@ -135,8 +127,7 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @GetMapping("/update/quest/{id}")
-    public String editForm(@PathVariable int id, Principal principal, Model model) {
-        LOG.log(Level.INFO, "Show the organizer update quest page, questId: " + id);
+    public String organizerEditQuest(@PathVariable int id, Principal principal, Model model) {
         QuestAndOrganizerNameDto q = questService.findById(id);
         AdminPanelUpdateQuestViewModel viewModel = new AdminPanelUpdateQuestViewModel(
                 createBaseViewModel(principal,"Обновление квеста")
@@ -149,9 +140,8 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @PostMapping("/update/quest/{id}")
-    public String edit(@PathVariable int id, @Valid @ModelAttribute("form") OrganizerUpdateQuestForm form,
+    public String organizerEditQuest(@PathVariable int id, @Valid @ModelAttribute("form") OrganizerUpdateQuestForm form,
                        BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "quest update from the organizer, questId: " + id);
         if (bindingResult.hasErrors()) {
             AdminPanelUpdateQuestViewModel viewModel = new AdminPanelUpdateQuestViewModel(
                     createBaseViewModel(principal,"Обновление квеста")
@@ -169,8 +159,7 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @PostMapping("/deleted/quest/{id}")
-    public String deletedQuest(@PathVariable int id) {
-        LOG.log(Level.INFO, "quest deleted from the organizer, questId: " + id);
+    public String organizerDeletedQuest(@PathVariable int id) {
         questService.deleteById(id);
         return "redirect:../../quests";
     }
@@ -180,7 +169,6 @@ public class OrganizerControllerImpl implements OrganizerController {
     public String pageOrganizerBookings(@ModelAttribute("form") PageSearchForm form,
                                     @RequestParam int questId,
                                     Principal principal, Model model) {
-        LOG.log(Level.INFO, "the organizer quest booking page, organizerId" + principal.getName());
         var page = form.page() != null ? form.page() : 1;
         var size = 5;
         String email = principal.getName();
@@ -199,10 +187,9 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @GetMapping("/create/booking/{questId}")
-    public String pageCreateBooking(Principal principal,
+    public String pageOrganizerCreateBooking(Principal principal,
                                     @PathVariable int questId,
                                     Model model) {
-        LOG.log(Level.INFO, "the page for creating bookings for the organizer quest, organizerId" + principal.getName());
 
         AdminPanelCreateBookingViewModel viewModel = new AdminPanelCreateBookingViewModel(
                 createBaseViewModel(principal, "Создание бронирования")
@@ -217,10 +204,9 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @PostMapping("/create/booking")
-    public String createBooking(@Valid @ModelAttribute("form") CreateBookingForm bookingForm,
+    public String organizerCreateBooking(@Valid @ModelAttribute("form") CreateBookingForm bookingForm,
                                 @RequestParam int questId,
                                 BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "creating bookings for the organizer quest, questId" + bookingForm.questId());
         if (bindingResult.hasErrors()) {
             AdminPanelCreateBookingViewModel viewModel = new AdminPanelCreateBookingViewModel(
                     createBaseViewModel(principal, "Создание Бронирования")
@@ -236,8 +222,7 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @GetMapping("/update/booking/{id}")
-    public String editBookingForm(@PathVariable int id, Principal principal, Model model) {
-        LOG.log(Level.INFO, "the page for update bookings for the organizer quest, bookingId" + id);
+    public String organizerEditBookingForm(@PathVariable int id, Principal principal, Model model) {
         BookingDto b = bookingService.findById(id);
         AdminPanelUpdateBookingViewModel viewModel = new AdminPanelUpdateBookingViewModel(
                 createBaseViewModel(principal, "Обновление бронирования")
@@ -250,11 +235,10 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @PostMapping("/update/booking/{id}")
-    public String editBooking(@PathVariable int id,
+    public String organizerEditBooking(@PathVariable int id,
                               @RequestParam int questId,
                               @Valid @ModelAttribute("form") UpdateBookingForm form,
                        BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "update bookings for the organizer's quest, bookingId" + id);
         if (bindingResult.hasErrors()) {
             AdminPanelUpdateBookingViewModel viewModel = new AdminPanelUpdateBookingViewModel(
                     createBaseViewModel(principal, "Обновление бронирования")
@@ -270,10 +254,9 @@ public class OrganizerControllerImpl implements OrganizerController {
 
     @Override
     @PostMapping("/deleted/booking/{id}")
-    public String deletedBooking(@PathVariable int id,
+    public String organizerDeletedBooking(@PathVariable int id,
                                  @RequestParam int questId,
                                  Principal principal) {
-        LOG.log(Level.INFO, "deleted bookings for the organizer's quest, bookingId" + id);
         bookingService.deletedAReservationFromTheOrganizer(id, questId, principal.getName());
         return "redirect:../../quests";
     }

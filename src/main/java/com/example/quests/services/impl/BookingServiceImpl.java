@@ -95,7 +95,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Cacheable(value = "bookings", key = "'id-' + #id")
     public BookingDto findById(int id) {
         Booking booking = bookingRepository.findById(Booking.class, id);
         return modelMapper.map(booking, BookingDto.class);
@@ -186,7 +185,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Cacheable(value = "bookings")
     public Page<BookingDto> organizerBookingAQuest(String email, int id, int page, int size){
         Pageable pageable = PageRequest.of(page - 1, size);
         List<Booking> bookings = bookingRepository.bookingsQuest(id, false);

@@ -35,7 +35,6 @@ public class AppSecurityConfiguration {
                                 authorizeHttpRequests.
                                         requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                                         .permitAll()
-                                        .requestMatchers("/favicon.ico").permitAll()
                                         .requestMatchers("/error").permitAll()
                                         .requestMatchers("/main", "/quest/**", "/organizer/**", "/honor-boards").permitAll().
                                         requestMatchers("/users/login", "/users/login-error", "/users/register", "/users/register/organizer").anonymous().

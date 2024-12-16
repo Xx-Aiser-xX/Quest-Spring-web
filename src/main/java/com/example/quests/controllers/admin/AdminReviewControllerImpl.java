@@ -18,9 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import java.security.Principal;
 
@@ -31,7 +28,6 @@ public class AdminReviewControllerImpl implements AdminReviewController {
     private final ReviewService reviewService;
     private final UserService userService;
     private final AdminMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
 
     @Autowired
@@ -45,7 +41,6 @@ public class AdminReviewControllerImpl implements AdminReviewController {
     @GetMapping("/reviews")
     public String pageAdminReviews(@ModelAttribute("form") PageSearchForm form,
                                    Principal principal, Model model) {
-        LOG.log(Level.INFO, "reviews review page for admin, ADMIN: " + principal.getName());
         var page = form.page() != null ? form.page() : 1;
         var size = 5;
         Page<ReviewDto> reviewDto = reviewService.getAll(page, size);
@@ -61,8 +56,7 @@ public class AdminReviewControllerImpl implements AdminReviewController {
 
     @Override
     @GetMapping("/create/review")
-    public String pageCreateReview(Principal principal, Model model) {
-        LOG.log(Level.INFO, "the review creation page for the administrator, ADMIN: " + principal.getName());
+    public String pageAdminCreateReview(Principal principal, Model model) {
         AdminPanelCreateReviewViewModel viewModel = new AdminPanelCreateReviewViewModel(
                 createBaseViewModel(principal, "Создание бронирования")
         );
@@ -75,9 +69,8 @@ public class AdminReviewControllerImpl implements AdminReviewController {
 
     @Override
     @PostMapping("/create/review")
-    public String createReview(@Valid @ModelAttribute("form") CreateAdminReviewForm reviewForm,
+    public String adminCreateReview(@Valid @ModelAttribute("form") CreateAdminReviewForm reviewForm,
                                   BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "creating a review from the administrator, bookingId:" + reviewForm.bookingId() + ", ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
             AdminPanelCreateReviewViewModel viewModel = new AdminPanelCreateReviewViewModel(
                     createBaseViewModel(principal, "Создание квеста")
@@ -94,8 +87,7 @@ public class AdminReviewControllerImpl implements AdminReviewController {
 
     @Override
     @GetMapping("/update/review/{id}")
-    public String editForm(@PathVariable int id, Principal principal, Model model) {
-        LOG.log(Level.INFO, "the review update page for the administrator, reviewId:" + id + ", ADMIN: " + principal.getName());
+    public String pageAdminEditReview(@PathVariable int id, Principal principal, Model model) {
         ReviewDto r = reviewService.findById(id);
         AdminPanelUpdateReviewViewModel viewModel = new AdminPanelUpdateReviewViewModel(
                 createBaseViewModel(principal, "Обновление бронирования")
@@ -109,9 +101,8 @@ public class AdminReviewControllerImpl implements AdminReviewController {
 
     @Override
     @PostMapping("/update/review/{id}")
-    public String edit(@PathVariable int id, @Valid @ModelAttribute("form") UpdateReviewForm form,
+    public String adminEditReview(@PathVariable int id, @Valid @ModelAttribute("form") UpdateReviewForm form,
                        BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "changing the feedback from the administrator, reviewId:" + id + ", ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
             AdminPanelUpdateReviewViewModel viewModel = new AdminPanelUpdateReviewViewModel(
                     createBaseViewModel(principal, "Обновление бронирования")
@@ -127,8 +118,7 @@ public class AdminReviewControllerImpl implements AdminReviewController {
 
     @Override
     @PostMapping("/deleted/review/{id}")
-    public String deletedQuest(@PathVariable int id) {
-        LOG.log(Level.INFO, "deleting a review by the administrator, reviewId:" + id);
+    public String adminDeletedReview(@PathVariable int id) {
         reviewService.deleteById(id);
         return "redirect:../../reviews";
     }

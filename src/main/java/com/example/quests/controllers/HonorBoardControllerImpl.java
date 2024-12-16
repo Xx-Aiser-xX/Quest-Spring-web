@@ -4,9 +4,6 @@ import com.example.quests.controllers.mappers.HonorBoardViewModelMapper;
 import com.example.quests.dto.PersonUserDto;
 import com.example.quests.dto.UserDto;
 import com.example.quests.services.UserService;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.questcontracts.controllers.HonorBoardController;
 import org.example.questcontracts.form.PageSearchForm;
 import org.example.questcontracts.viewmodel.BaseViewModel;
@@ -26,7 +23,6 @@ import java.security.Principal;
 public class HonorBoardControllerImpl implements HonorBoardController {
     private final UserService userService;
     private final HonorBoardViewModelMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public HonorBoardControllerImpl(UserService userService, HonorBoardViewModelMapper mapper) {
@@ -39,7 +35,6 @@ public class HonorBoardControllerImpl implements HonorBoardController {
     public String pageHonorBoardUser(@ModelAttribute("form") PageSearchForm form,
                                      Principal principal, Model model){
 
-        LOG.log(Level.INFO, "Show Honor board page");
         var page = form.page() != null ? form.page() : 1;
         var size = 9;
 

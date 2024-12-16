@@ -87,7 +87,6 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    @Cacheable(value="quests")
     public Page<QuestAndOrganizerNameDto> getQuestAndNameOrganizer(int page, int size) {
         Page<Quest> quests = questRepository.questsAndOrganizer(page - 1, size, false);
         return quests.map(quest -> modelMapper.map(quest, QuestAndOrganizerNameDto.class));

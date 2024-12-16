@@ -18,9 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import java.security.Principal;
 
@@ -30,7 +27,6 @@ public class AdminOrganizerControllerImpl implements AdminOrganizerController {
     private final OrganizerService organizerService;
     private final UserService userService;
     private final AdminMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
 
     public AdminOrganizerControllerImpl(OrganizerService organizerService, UserService userService, AdminMapper mapper) {
@@ -43,7 +39,6 @@ public class AdminOrganizerControllerImpl implements AdminOrganizerController {
     @GetMapping("/organizers")
     public String pageAdminOrganizers(@ModelAttribute("form") PageSearchForm form,
                                       Principal principal, Model model) {
-        LOG.log(Level.INFO, "organizers review page for admin, ADMIN: " + principal.getName());
         var page = form.page() != null ? form.page() : 1;
         var size = 5;
         Page<OrganizerDto> organizerDto = organizerService.getAll(page, size);
@@ -59,8 +54,7 @@ public class AdminOrganizerControllerImpl implements AdminOrganizerController {
 
     @Override
     @GetMapping("/create/organizer")
-    public String pageCreateOrganizer(Principal principal, Model model) {
-        LOG.log(Level.INFO, "the organizer creation page for the administrator, ADMIN: " + principal.getName());
+    public String pageAdminCreateOrganizer(Principal principal, Model model) {
         AdminPanelCreateOrganizerViewModel viewModel = new AdminPanelCreateOrganizerViewModel(
                 createBaseViewModel(principal, "Создание бронирования")
         );
@@ -74,9 +68,8 @@ public class AdminOrganizerControllerImpl implements AdminOrganizerController {
 
     @Override
     @PostMapping("/create/organizer")
-    public String createOrganizer(@Valid @ModelAttribute("form") OrganizerRegistrationForm form,
+    public String adminCreateOrganizer(@Valid @ModelAttribute("form") OrganizerRegistrationForm form,
                                 BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "creating an organizer from the administrator, organizerEmail:" + form.email() + ", ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(error -> {
                 System.out.println("Ошибка: " + error.getDefaultMessage());
@@ -95,8 +88,7 @@ public class AdminOrganizerControllerImpl implements AdminOrganizerController {
 
     @Override
     @GetMapping("/update/organizer/{id}")
-    public String editForm(@PathVariable int id, Principal principal, Model model) {
-        LOG.log(Level.INFO, "the organizer update page for the administrator, organizerId:" + id + " ADMIN: " + principal.getName());
+    public String pageAdminEditOrganizer(@PathVariable int id, Principal principal, Model model) {
         OrganizerDto o = organizerService.findById(id);
         AdminPanelUpdateOrganizerViewModel viewModel = new AdminPanelUpdateOrganizerViewModel(
                 createBaseViewModel(principal, "Обновление квеста")
@@ -110,9 +102,8 @@ public class AdminOrganizerControllerImpl implements AdminOrganizerController {
 
     @Override
     @PostMapping("/update/organizer/{id}")
-    public String edit(@PathVariable int id, @Valid @ModelAttribute("form") UpdateOrganizerForm form,
+    public String adminEditOrganizer(@PathVariable int id, @Valid @ModelAttribute("form") UpdateOrganizerForm form,
                        BindingResult bindingResult, Principal principal, Model model) {
-        LOG.log(Level.INFO, "changing the organizer from the administrator, organizerId:" + id + " , ADMIN: " + principal.getName());
         if (bindingResult.hasErrors()) {
             AdminPanelUpdateQuestViewModel viewModel = new AdminPanelUpdateQuestViewModel(
                     createBaseViewModel(principal, "Обновление квеста")
@@ -128,8 +119,7 @@ public class AdminOrganizerControllerImpl implements AdminOrganizerController {
 
     @Override
     @PostMapping("/deleted/organizer/{id}")
-    public String deletedQuest(@PathVariable int id) {
-        LOG.log(Level.INFO, "deleting the organizer by the administrator, organizerId:" + id);
+    public String adminDeletedOrganizer(@PathVariable int id) {
         organizerService.deleteById(id);
         return "redirect:../../organizers";
     }

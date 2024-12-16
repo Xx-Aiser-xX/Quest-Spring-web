@@ -16,9 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import java.security.Principal;
 
@@ -30,7 +27,6 @@ public class QuestControllerImpl implements QuestController {
     private final ReviewService reviewService;
     private final UserService userService;
     private final QuestViewModelMapper mapper;
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public QuestControllerImpl(QuestService questService, BookingService bookingService,
@@ -47,7 +43,6 @@ public class QuestControllerImpl implements QuestController {
     public String pageQuest(@ModelAttribute("bookingForm") BookingSearchForm bookingForm,
                             @ModelAttribute("reviewForm") ReviewSearchForm reviewForm,
                             @PathVariable int id, Principal principal, Model model){
-        LOG.log(Level.INFO, "Show quest page");
         var bookingPage = bookingForm.bookingPage() != null ? bookingForm.bookingPage() : 1;
         var bookingSize = 10;
         var reviewPage = reviewForm.reviewPage() != null ? reviewForm.reviewPage() : 1;
@@ -73,8 +68,7 @@ public class QuestControllerImpl implements QuestController {
 
     @Override
     @PostMapping("/reserve")
-    public String booking(Principal principal, @RequestParam int bookingId){
-        LOG.log(Level.INFO, "booking a quest by the user, bookingId: " + bookingId);
+    public String userBookingQuest(Principal principal, @RequestParam int bookingId){
         String email = principal.getName();
         UserAndEmailDto userDto = userService.findByUserAndEmail(email);
         bookingService.booking(userDto.getId(), bookingId);
